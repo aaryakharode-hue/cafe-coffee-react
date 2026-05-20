@@ -1,2 +1,2 @@
-# cafe-coffee-react
+# cafe-coffee
 Responsive cafe coffee website
