@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baked Goods</title>
+
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+    }
+
+    body{
+        background: #fff7f0;
+        padding: 40px;
+        position: relative;
+    }
+
+    /* Cart Badge */
+    .cart-box{
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #5a3e36;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 18px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    h1{
+        text-align: center;
+        font-size: 3rem;
+        color: #5a3e36;
+        margin-bottom: 10px;
+    }
+
+    p.subtitle{
+        text-align: center;
+        font-size: 1.1rem;
+        color: #b0866c;
+        margin-bottom: 40px;
+    }
+
+    .goods-container{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 25px;
+    }
+
+    .goods-card{
+        background: #ffffff;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: 0.3s ease;
+    }
+
+    .goods-card:hover{
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .goods-card img{
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+    }
+
+    .goods-content{
+        padding: 18px;
+    }
+
+    .goods-content h3{
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+        color: #5a3e36;
+    }
+
+    .goods-content p{
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #6d5a4a;
+    }
+
+    /* Add to Cart Button */
+    .add-cart{
+        margin-top: 10px;
+        width: 100%;
+        padding: 10px;
+        background: #5a3e36;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .add-cart:hover{
+        background: #7a564c;
+    }
+
+</style>
+</head>
+<body>
+
+<!-- Cart Display -->
+<div class="cart-box">Cart: <span id="cartCount">0</span></div>
+
+<h1>Baked Goods</h1>
+<p class="subtitle">Freshly baked every day with love and care.</p>
+
+<div class="goods-container">
+
+    <div class="goods-card">
+        <img src="butter.jpg" alt="Croissants">
+        <div class="goods-content">
+            <h3>Butter Croissants</h3>
+            <p>Flaky, buttery layers baked to golden perfection.</p>
+            <button class="add-cart" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+
+    <div class="goods-card">
+        <img src="https://images.unsplash.com/photo-1598373182133-52452e2f6c8a" alt="Cookies">
+        <div class="goods-content">
+            <h3>Chocolate Chip Cookies</h3>
+            <p>Soft, chewy cookies loaded with rich chocolate chips.</p>
+            <button class="add-cart" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+
+    <div class="goods-card">
+        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587" alt="Cakes">
+        <div class="goods-content">
+            <h3>Fresh Cakes</h3>
+            <p>Moist and delicious cakes in many flavors.</p>
+            <button class="add-cart" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+
+    <div class="goods-card">
+        <img src="https://images.unsplash.com/photo-1600336754169-e6e8c33f0ccf" alt="Donuts">
+        <div class="goods-content">
+            <h3>Glazed Donuts</h3>
+            <p>Sweet shiny glaze with soft donut texture.</p>
+            <button class="add-cart" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+
+    <div class="goods-card">
+        <img src="https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b" alt="Muffins">
+        <div class="goods-content">
+            <h3>Blueberry Muffins</h3>
+            <p>Juicy blueberries with a sweet crumble top.</p>
+            <button class="add-cart" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+
+    <div class="goods-card">
+        <img src="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55" alt="Bread">
+        <div class="goods-content">
+            <h3>Artisan Bread</h3>
+            <p>Crusty outside, soft inside — perfect for meals.</p>
+            <button class="add-cart" onclick="addToCart()">Add to Cart</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let cart = 0;
+
+    function addToCart(){
+        cart++;
+        document.getElementById("cartCount").innerText = cart;
+
+        // Optional small animation
+        const cartBox = document.querySelector(".cart-box");
+        cartBox.style.transform = "scale(1.1)";
+        setTimeout(()=> cartBox.style.transform = "scale(1)", 150);
+    }
+</script>
+
+</body>
+</html>

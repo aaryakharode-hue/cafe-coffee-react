@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile | Brew & Bloom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #F5F5DC;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            animation: fadeIn 0.6s ease-in;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .navbar {
+            position: fixed; top: 0; width: 100%; padding: 15px 10%;
+            background: rgba(111, 78, 55, 0.95); display: flex;
+            justify-content: space-around; align-items: center; z-index: 1000;
+        }
+        .navbar a { color: white; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+
+        .profile-container {
+            background: white; width: 90%; max-width: 450px;
+            border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            padding: 40px; text-align: center; margin-top: 80px;
+        }
+        .profile-header-icon {
+            width: 80px; height: 80px; background: #6F4E37;
+            color: white; font-size: 35px; line-height: 80px;
+            border-radius: 50%; margin: 0 auto 20px;
+            font-family: 'Playfair Display', serif;
+        }
+        h2 { font-family: 'Playfair Display', serif; color: #6F4E37; margin-bottom: 5px; font-size: 1.8rem; }
+        .role-badge {
+            display: inline-block; padding: 5px 15px; background: #e0d4c8;
+            color: #6F4E37; border-radius: 20px; font-size: 11px;
+            text-transform: uppercase; font-weight: bold; margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+        .info-box { border-top: 1px solid #eee; padding-top: 20px; }
+        .info-row {
+            display: flex; justify-content: space-between;
+            padding: 12px 0; text-align: left;
+        }
+        .info-label { font-weight: 600; color: #888; font-size: 0.9rem; }
+        .info-value { color: #333; font-weight: 500; }
+
+        /* Edit Mode Styles */
+        .edit-form { display: none; text-align: left; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #888; margin-bottom: 5px; }
+        .edit-form input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+
+        /* Order History Styles */
+        .order-history { margin-top: 30px; text-align: left; border-top: 1px solid #eee; padding-top: 20px; }
+        .order-history h3 { font-family: 'Playfair Display', serif; color: #6F4E37; font-size: 1.2rem; margin-bottom: 15px; }
+        .order-list { display: flex; flex-direction: column; gap: 15px; max-height: 300px; overflow-y: auto; padding-right: 5px; }
+        .order-item { background: #FAF9F6; padding: 15px; border-radius: 12px; border: 1px solid #eee; }
+        .order-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: #888; margin-bottom: 8px; }
+        .order-content { font-size: 0.85rem; color: #333; line-height: 1.4; }
+        .order-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ddd; }
+        .order-total { font-weight: 700; color: #6F4E37; }
+        .status-badge { font-size: 0.7rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; text-transform: uppercase; }
+
+        .btn-group { margin-top: 30px; display: flex; flex-direction: column; gap: 10px; }
+        .admin-btn {
+            padding: 12px; background: #6F4E37; color: white;
+            text-decoration: none; border-radius: 10px; font-weight: 600;
+            display: block;
+            transition: 0.3s;
+        }
+        .logout-btn {
+            padding: 12px; background: #f4f1ea; color: #c9302c;
+            border: 1px solid #c9302c; border-radius: 10px; cursor: pointer;
+            font-weight: 600; transition: 0.3s;
+        }
+        .logout-btn:hover { background: #c9302c; color: white; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="order online.html">Order Online</a>
+        <a href="review.html">Reviews</a>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-header-icon" id="userInitial">?</div>
+        <h2 id="userName">User Profile</h2>
+        <div class="role-badge" id="userRole">Member</div>
+
+        <div class="info-box" id="infoView">
+            <div class="info-row">
+                <span class="info-label">Email Address</span>
+                <span class="info-value" id="userEmail">loading...</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Member Since</span>
+                <span class="info-value" id="userDate">loading...</span>
+            </div>
+            <button class="logout-btn" style="margin-top: 20px; color: #6F4E37; border-color: #6F4E37; background: transparent; width: 100%;" onclick="toggleEdit(true)">Edit Profile</button>
+            <a href="admin.html" id="adminLink" class="admin-btn" style="display:none; margin-top: 15px;">Admin Dashboard</a>
+        </div>
+
+        <div class="edit-form" id="editView">
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="editEmail">
+            </div>
+            <div class="input-group">
+                <label>New Password (leave blank to keep current)</label>
+                <input type="password" id="editPass" placeholder="********">
+            </div>
+            <div class="btn-group">
+                <button class="admin-btn" style="border:none; cursor:pointer;" onclick="updateProfile()">Save Changes</button>
+                <button class="logout-btn" style="background: white;" onclick="toggleEdit(false)">Cancel</button>
+            </div>
+        </div>
+
+        <div class="order-history">
+            <h3>Your Past Orders</h3>
+            <div id="orderList" class="order-list">
+                <p style="text-align:center; color:#888; font-size:0.8rem;">Loading history...</p>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        function loadProfile() {
+            fetch('api.php?action=getProfile')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.authenticated) {
+                    window.location.href = "cafe login.html";
+                    return;
+                }
+                document.getElementById('userName').innerText = data.username;
+                document.getElementById('userEmail').innerText = data.email;
+                document.getElementById('userRole').innerText = data.role;
+                document.getElementById('userInitial').innerText = data.username[0].toUpperCase();
+                document.getElementById('userDate').innerText = new Date(data.created_at).toLocaleDateString('en-GB', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                });
+                
+                if (data.role === 'admin') {
+                    document.getElementById('adminLink').style.display = 'block';
+                }
+                
+                // Pre-fill edit fields
+                document.getElementById('editEmail').value = data.email;
+
+                // Load Order History
+                loadOrderHistory();
+            });
+        }
+
+        function loadOrderHistory() {
+            fetch('api.php?action=getMyOrders')
+            .then(res => res.json())
+            .then(orders => {
+                const container = document.getElementById('orderList');
+                if (orders.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:#888; font-size:0.8rem;">No orders found yet.</p>';
+                    return;
+                }
+                container.innerHTML = orders.map(order => `
+                    <div class="order-item">
+                        <div class="order-meta">
+                            <span>${new Date(order.created_at).toLocaleDateString()}</span>
+                            <span class="status-badge" style="background:${order.status === 'Completed' ? '#D4EDDA' : '#FFECC7'}; color:${order.status === 'Completed' ? '#155724' : '#856404'}">${order.status}</span>
+                        </div>
+                        <div class="order-content">${order.items}</div>
+                        <div class="order-footer">
+                            <span style="font-size:0.8rem; color:#888;">Total Paid:</span>
+                            <span class="order-total">₹${parseFloat(order.total).toFixed(2)}</span>
+                        </div>
+                    </div>
+                `).join('');
+            });
+        }
+
+        function toggleEdit(show) {
+            document.getElementById('infoView').style.display = show ? 'none' : 'block';
+            document.getElementById('editView').style.display = show ? 'block' : 'none';
+        }
+
+        function updateProfile() {
+            const email = document.getElementById('editEmail').value;
+            const password = document.getElementById('editPass').value;
+
+            if(!email) {
+                alert("Please enter a valid email.");
+                return;
+            }
+
+            fetch('api.php?action=updateProfile', {
+                method: 'POST',
+                body: JSON.stringify({ email, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Profile updated successfully!");
+                    location.reload();
+                } else {
+                    alert(data.message || "Update failed.");
+                }
+            });
+        }
+
+        function handleLogout() {
+            if (confirm("Are you sure you want to logout?")) {
+                fetch('api.php?action=logout', { method: 'POST' })
+                .then(() => window.location.href = "index.html");
+            }
+        }
+        window.onload = loadProfile;
+    </script>
+</body>
+</html>

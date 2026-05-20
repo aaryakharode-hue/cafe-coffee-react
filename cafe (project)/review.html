@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brew & Bloom Reviews</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap" rel="stylesheet">   
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(to right, #f5f5dc, #fff);
+    color: #333;
+    padding-top: 80px; /* ✅ space for fixed navbar */
+}
+
+/* 🌙 Dark Mode */
+body.dark-mode {
+    background: #121212;
+    color: #eee;
+}
+
+/* 🔝 FIXED NAVBAR */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(143, 110, 81, 0.95);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    padding: 15px 0;
+}
+
+.navbar {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+
+/* UPDATED LOGO STYLE: Removed background box, added stylish typography */
+        .logo {
+            font-family: 'Playfair Display', serif;
+           font-size:24px;
+            font-weight: 900;
+            color: #070707;
+            text-decoration: none;
+            letter-spacing: -1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            display: inline-block;
+            transition: 0.3s ease;
+        }
+
+        /* Styling for the ampersand symbol */
+        .logo span {
+            font-style: italic;
+            font-family: 'Georgia', serif;
+            font-weight: 400;
+            margin: 0 5px;
+            color: #d4a373; 
+        }
+
+        .logo:hover { transform: scale(1.02); color: #fff; }
+        
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    z-index: 999;
+}
+
+.nav-links li {
+    margin-left: 25px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+}
+
+/* 🍔 Mobile */
+.menu-toggle {
+    display: none;
+    font-size: 26px;
+    color: white;
+    cursor: pointer;
+}
+
+.nav-icons button {
+    background: none;
+    border: 1px solid #ccc;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: rgba(0,0,0,0.95);
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 0;
+        display: none;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+}
+
+/* 📝 Form */
+.review-form {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.review-form input,
+.review-form textarea {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.ratings {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.stars {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.stars span {
+    color: #ccc;
+}
+
+.stars span.active {
+    color: gold;
+}
+
+.rating-text {
+    font-size: 13px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #6f4e37;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.reviews {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+.review-card {
+    background: white;
+    margin: 15px 0;
+    padding: 18px;
+    border-radius: 15px;
+}
+
+.stars-display {
+    color: gold;
+}
+
+/* 🌙 Dark Mode Fix */
+body.dark-mode .review-form,
+body.dark-mode .review-card {
+    background: #1e1e1e;
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+    background: #2c2c2c;
+    color: white;
+    border: 1px solid #555;
+}
+/* 🌈 Smooth Animations */
+
+/* Button Glow Effect */
+button{
+    transition: all 0.3s ease;
+}
+
+button:hover{
+    box-shadow: 0 0 10px rgba(111, 78, 55, 0.6),
+                0 0 20px rgba(111, 78, 55, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Menu Item Hover Zoom */
+.item-card{
+    transition: all 0.3s ease;
+}
+
+.item-card:hover{
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* Page Fade In Animation */
+body{
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+ <header class="main-header">
+  <nav class="navbar">
+    <a href="index.html" class="logo">Brew & Bloom</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="order online.html">Order Online</a></li>
+      <li><a href="review.html">review</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a>🛒</a>
+      <a href="cafe login.html" id="authLink">👤</a>
+    </div>
+  </nav>
+</header>
+
+<section class="review-form">
+    <h2>Write a Review</h2>
+
+    <input type="text" id="name" placeholder="Your Name">
+    <textarea id="reviewText" placeholder="Share your experience..."></textarea>
+
+    <div class="ratings">
+        <div>
+            <label>Taste</label>
+            <div class="stars" data-name="taste"></div>
+            <span class="rating-text">Select</span>
+        </div>
+
+        <div>
+            <label>Service</label>
+            <div class="stars" data-name="service"></div>
+            <span class="rating-text">Select</span>
+        </div>
+
+        <div>
+            <label>Ambience</label>
+            <div class="stars" data-name="ambience"></div>
+            <span class="rating-text">Select</span>
+        </div>
+
+        <div>
+            <label>Aesthetics</label>
+            <div class="stars" data-name="aesthetic"></div>
+            <span class="rating-text">Select</span>
+        </div>
+    </div>
+
+    <button onclick="addReview()">Submit Review</button>
+</section>
+
+<section class="reviews">
+    <h2 style="text-align:center;">Customer Feedback</h2>
+    <div id="reviewList"></div>
+</section>
+
+<script>
+function checkAccess() {
+    fetch('api.php?action=getProfile')
+        .then(res => res.json())
+        .then(data => {
+            const navIcons = document.querySelector('.nav-icons');
+            if (!data.authenticated) {
+                alert("Please login to view or write reviews.");
+                window.location.href = "cafe login.html?redirect=review.html";
+            } else {
+                navIcons.innerHTML = `
+                    <a>🛒</a>
+                    <a href="profile.html" style="color:white;text-decoration:none;">Profile</a>
+                    <a href="#" id="authLink" style="color:white;text-decoration:none;">Logout</a>
+                `;
+                document.getElementById('authLink').onclick = function(e) {
+                    e.preventDefault();
+                    if (confirm("Are you sure you want to logout?")) {
+                        fetch('api.php?action=logout', { method: 'POST' })
+                            .then(() => window.location.href = "index.html");
+                    }
+                };
+            }
+        });
+}
+
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+}
+
+function toggleMenu() {
+    document.getElementById("navLinks").classList.toggle("active");
+}
+
+const labels = ["Average", "Good", "Amazing", "Excellent", "Outstanding"];
+const ratingsData = {};
+
+// ⭐ Stars
+document.querySelectorAll(".stars").forEach(starContainer => {
+    const text = starContainer.nextElementSibling;
+    const key = starContainer.dataset.name;
+
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement("span");
+        star.innerHTML = "★";
+
+        star.addEventListener("click", () => {
+            starContainer.querySelectorAll("span").forEach(s => s.classList.remove("active"));
+            for (let j = 0; j < i; j++) {
+                starContainer.children[j].classList.add("active");
+            }
+            ratingsData[key] = i;
+            text.textContent = labels[i - 1];
+        });
+
+        starContainer.appendChild(star);
+    }
+});
+
+function getStars(num) {
+    return "⭐".repeat(num);
+}
+
+// Load
+function loadReviews() {
+    fetch('api.php?action=getReviews')
+    .then(res => res.json())
+    .then(reviews => {
+        const list = document.getElementById("reviewList");
+        list.innerHTML = "";
+        reviews.forEach((r) => {
+            list.innerHTML += `
+            <div class="review-card">
+                <h3>${r.name}</h3>
+                <p>${r.text}</p>
+                <div class="stars-display">Taste: ${getStars(r.taste)}</div>
+                <div class="stars-display">Service: ${getStars(r.service)}</div>
+                <div class="stars-display">Ambience: ${getStars(r.ambience)}</div>
+                <div class="stars-display">Aesthetics: ${getStars(r.aesthetic)}</div>
+                <button onclick="deleteReview(${r.id})" style="margin-top:10px;background:red;">Delete</button>
+            </div>
+            `;
+        });
+    });
+}
+
+function addReview() {
+    const name = document.getElementById("name").value;
+    const text = document.getElementById("reviewText").value;
+
+    const { taste, service, ambience, aesthetic } = ratingsData;
+
+    if (!name || !text || !taste || !service || !ambience || !aesthetic) {
+        alert("Please fill all fields!");
+        return;
+    }
+
+    const review = { name, text, taste, service, ambience, aesthetic };
+
+    fetch('api.php?action=addReview', {
+        method: 'POST',
+        body: JSON.stringify(review)
+    }).then(() => {
+        loadReviews();
+        document.getElementById("name").value = "";
+        document.getElementById("reviewText").value = "";
+    });
+}
+
+function deleteReview(id) {
+    if(confirm("Delete this review?")) {
+        fetch('api.php?action=deleteReview', {
+            method: 'POST',
+            body: JSON.stringify({ id })
+        }).then(() => loadReviews());
+    }
+}
+
+window.onload = function() {
+    checkAccess();
+    loadReviews();
+};
+</script>
+
+</body>
+</html>

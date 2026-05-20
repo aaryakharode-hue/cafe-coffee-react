@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Ordering | The Cozy Bean</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-brown: #6F4E37;
+            --accent-green: #4CAF50;
+            --light-cream: #F5F5DC;
+            --dark-text: #333;
+            --button-hover: #5a3e2a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 0; color: var(--dark-text);
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+
+        .main-header { background: rgba(143, 110, 81, 0.95); padding: 15px 0; border-bottom: 2px solid var(--primary-brown); backdrop-filter: blur(5px); }
+        .navbar { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* UPDATED LOGO STYLE: Removed background box, added stylish typography */
+        .logo {
+            font-family: 'Playfair Display', serif;
+           font-size:24px;
+            font-weight: 900;
+            color: #070707;
+            text-decoration: none;
+            letter-spacing: -1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            display: inline-block;
+            transition: 0.3s ease;
+        }
+
+        /* Styling for the ampersand symbol */
+        .logo span {
+            font-style: italic;
+            font-family: 'Georgia', serif;
+            font-weight: 400;
+            margin: 0 5px;
+            color: #d4a373; 
+        }
+
+        .logo:hover { transform: scale(1.02); color: #fff; }
+        
+        /* Rest of your CSS continues here... */
+        
+        .nav-links { list-style: none; display: flex; gap: 25px; }
+        .nav-links a { text-decoration: none; color: rgb(7, 6, 6); font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--light-cream); }
+        .nav-icons { display: flex; gap: 15px; }
+        .nav-icons a { text-decoration: none; font-size: 20px; cursor: pointer; color: white; }
+
+        #order-container { max-width: 1200px; margin: 40px auto; display: flex; gap: 30px; padding: 20px; }
+
+        #product-list { flex: 3; background-color: rgba(255, 255, 255, 0.88); backdrop-filter: blur(12px); padding: 30px; border-radius: 15px; }
+        .item-card { display: flex; justify-content: space-between; align-items: center; padding: 18px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+
+        .size-selector { margin-top: 10px; display: flex; gap: 10px; }
+        .size-btn { padding: 4px 12px; border: 1px solid var(--primary-brown); background: transparent; color: var(--primary-brown); border-radius: 15px; cursor: pointer; }
+        .size-btn.active { background: var(--primary-brown); color: white; }
+
+        .item-price-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; min-width: 110px; }
+        .item-price { font-weight: bold; color: var(--primary-brown); }
+
+        .add-button { background-color: var(--primary-brown); color: white; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; }
+
+        #cart { flex: 1.5; position: sticky; top: 30px; height: fit-content; background-color: rgba(255, 250, 240, 0.92); padding: 25px; border-radius: 15px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #ccc; }
+        .quantity-controls { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { background: white; border: 1px solid var(--primary-brown); color: var(--primary-brown); width: 25px; height: 25px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        
+        #checkout-button { width: 100%; background-color: var(--accent-green); color: white; border: none; padding: 15px; font-weight: bold; border-radius: 10px; cursor: pointer; margin-top: 20px; }
+        #checkout-button:disabled { background-color: #bbb; cursor: not-allowed; }
+
+        @media (max-width: 900px) { #order-container { flex-direction: column; } }
+
+        /* AI Box Styles */
+        .ai-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+        }
+        .ai-box:hover { transform: translateY(-3px); }
+        .ai-box h3 { margin-top: 0; color: var(--primary-brown); }
+        .ai-box button {
+            margin: 6px;
+            padding: 10px 18px;
+            border-radius: 25px;
+            border: none;
+            background: var(--primary-brown);
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        .ai-box button:hover { transform: scale(1.05); background: var(--button-hover); }
+        #ai-add-btn { background: var(--accent-green) !important; display: none; margin-top: 15px; }
+
+    /* 🌈 Smooth Animations */
+
+/* Button Glow Effect */
+button{
+    transition: all 0.3s ease;
+}
+
+button:hover{
+    box-shadow: 0 0 10px rgba(111, 78, 55, 0.6),
+                0 0 20px rgba(111, 78, 55, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Menu Item Hover Zoom */
+.item-card{
+    transition: all 0.3s ease;
+}
+
+.item-card:hover{
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* Page Fade In Animation */
+body{
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+    </style>
+</head>
+<body>
+
+<header class="main-header">
+    <nav class="navbar">
+        <a href="index.html" class="logo">Brew & Bloom</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="order online.html">Order Online</a></li>
+            <li><a href="review.html">review</a></li>
+        </ul>
+        <div class="nav-icons">
+            <a>🛒</a>
+            <a href="cafe login.html" id="authLink">👤</a>
+        </div>
+    </nav>
+</header>
+
+<div id="order-container">
+    <div id="product-list">
+        <div class="ai-box">
+            <h3>🤖 What’s your mood today?</h3>
+            <button onclick="recommendMood('tired')">Tired 😴</button>
+            <button onclick="recommendMood('happy')">Happy 😊</button>
+            <button onclick="recommendMood('work')">Work 💻</button>
+            <p id="ai-suggestion"></p>
+            <button id="ai-add-btn" onclick="addRecommendedToCart()">Add to Cart</button>
+        </div>
+
+        <div id="menu-container"></div>
+    </div>
+
+    <div id="cart">
+        <h3>Your Cart</h3>
+        <div id="cart-items"></div>
+        <p id="empty-msg" style="text-align:center; color:#777;">Your cart is empty</p>
+        <hr>
+        <div style="display:flex; justify-content:space-between;">
+            <span>Total:</span>
+            <span id="grand-total" style="font-weight:bold;">₹0</span>
+        </div>
+        <button id="checkout-button" disabled onclick="submitOrder()">Place Order</button>
+    </div>
+</div>
+
+<script>
+    function checkAccess() {
+        fetch('api.php?action=getProfile')
+            .then(res => res.json())
+            .then(data => {
+                const navIcons = document.querySelector('.nav-icons');
+                if (!data.authenticated) {
+                    alert("Please login to place an order.");
+                    window.location.href = "cafe login.html?redirect=order%20online.html";
+                } else {
+                    navIcons.innerHTML = `
+                        <a>🛒</a>
+                        <a href="profile.html" style="font-size:0.9rem;">Profile</a>
+                        <a href="#" id="authLink" style="font-size:0.9rem;">Logout</a>
+                    `;
+                    document.getElementById('authLink').onclick = function(e) {
+                        e.preventDefault();
+                        if (confirm("Are you sure you want to logout?")) {
+                            fetch('api.php?action=logout', { method: 'POST' })
+                                .then(() => window.location.href = "index.html");
+                        }
+                    };
+                }
+            });
+    }
+    checkAccess();
+
+    let cart = [];
+    const DELIVERY_FEE = 50;
+    const currentSelection = {};
+    let recommendedItemId = null;
+
+    const menuData = [
+        { category: "🌟 Signature Brews", items: [ { id: 101, name: "Cozy Mocha", desc: "Dark chocolate, espresso, steamed milk, whipped cream and cinnamon.", priceL: 270, priceS: 210 }, { id: 102, name: "Latte", desc: "Latte infused with maple syrup & roasted pecan extract.", priceL: 250, priceS: 190 }, { id: 103, name: "Rosewater Cold Brew", desc: "24-hour steeped cold brew with floral rosewater notes.", priceL: 260, priceS: 200 }, { id: 104, name: "Orange Zest Americano", desc: "Bright espresso with fresh orange oils and zest.", priceL: 240, priceS: 180 }, { id: 105, name: "Coconut Cream Latte", desc: "Creamy coconut milk paired with our signature roast.", priceL: 260, priceS: 200 } ] },
+        { category: "☕ Espresso Classics", items: [ { id: 201, name: "Cappuccino", desc: "Espresso with steamed milk & thick micro-foam.", priceL: 220, priceS: 170 }, { id: 202, name: "Americano", desc: "Rich espresso shots topped with hot water.", priceL: 200, priceS: 150 }, { id: 203, name: "Vanilla Bean Latte", desc: "Latte infused with real Madagascar vanilla bean.", priceL: 250, priceS: 190 }, { id: 204, name: "Flat White", desc: "Velvety micro-foam poured over a double shot of espresso.", priceL: 250, priceS: 190 }, { id: 205, name: "Honey Cinnamon Latte", desc: "Natural honey sweetness with a dusting of cinnamon.", priceL: 260, priceS: 200 } ] },
+        { category: "🔥 Hot Drinks", items: [ { id: 301, name: "Drip Coffee", desc: "Freshly brewed house blend for a smooth, clean finish.", priceL: 180, priceS: 140 }, { id: 302, name: "Matcha Latte", desc: "Premium matcha blended with steamed milk.", priceL: 260, priceS: 200 }, { id: 303, name: "Hot Chocolate", desc: "Rich cocoa topped with creamy foam or marshmallows.", priceL: 270, priceS: 210 }, { id: 304, name: "Masala Chai", desc: "Spiced Indian tea brewed with ginger and cardamom.", priceL: 150, priceS: 100 } ] },
+        { category: "🥐 Bakery & Bites", items: [ { id: 401, name: "Artisan Breakfast Sandwich", desc: "Fresh bread filled with egg, cheese and vegetables.", priceL: 240, priceS: 180 }, { id: 402, name: "Paneer Grilled Sandwich", desc: "Grilled sandwich stuffed with spiced paneer and vegetables.", priceL: 230, priceS: 170 }, { id: 403, name: "Butter Croissant", desc: "Flaky French pastry baked with rich butter layers.", priceL: 170, priceS: 120 }, { id: 404, name: "Blueberry Muffin", desc: "Soft muffin filled with sweet blueberries.", priceL: 190, priceS: 140 } ] }
+    ];
+        function renderMenu() {
+        const container = document.getElementById('menu-container');
+        let html = '';
+        menuData.forEach(cat => {
+            html += `<h2 style="margin-top:30px; border-bottom:2px solid #eee; padding-bottom:10px;">${cat.category}</h2>`;
+            cat.items.forEach(item => {
+                const hasSizes = item.priceS !== undefined;
+                const defaultPrice = hasSizes ? item.priceL : item.price;
+                const defaultSize = hasSizes ? 'Large' : 'Standard';
+                currentSelection[item.id] = { size: defaultSize, price: defaultPrice, name: item.name };
+
+                html += `
+                <div class="item-card" id="card-${item.id}">
+                    <div class="item-info">
+                        <h4>${item.name}</h4>
+                        <p style="font-size:0.9rem; color:#666;">${item.desc}</p>
+                        ${hasSizes ? `
+                        <div class="size-selector">
+                            <button class="size-btn" onclick="selectSize(${item.id}, 'Small', ${item.priceS})">Small</button>
+                            <button class="size-btn active" onclick="selectSize(${item.id}, 'Large', ${item.priceL})">Large</button>
+                        </div>` : ''}
+                    </div>
+                    <div class="item-price-actions">
+                        <span class="item-price" id="price-display-${item.id}">₹${defaultPrice}</span>
+                        <button class="add-button" onclick="handleAddToCart(${item.id})">Add</button>
+                    </div>
+                </div>`;
+            });
+        });
+        container.innerHTML = html;
+    }
+
+    // AI Logic
+    function recommendMood(mood) {
+        const suggest = document.getElementById('ai-suggestion');
+        const btn = document.getElementById('ai-add-btn');
+        btn.style.display = "inline-block";
+        
+        if(mood === 'tired') {
+            suggest.innerText = "Feeling drained? Try a Strong Americano ☕";
+            recommendedItemId = 202;
+        } else if(mood === 'happy') {
+            suggest.innerText = "Keep the vibes high with a Vanilla Bean Latte! ✨";
+            recommendedItemId = 203;
+        } else {
+            suggest.innerText = "Focus mode: On. Grab a smooth Cappuccino. 💻";
+            recommendedItemId = 201;
+        }
+    }
+
+    function addRecommendedToCart() {
+        if(recommendedItemId) handleAddToCart(recommendedItemId);
+    }
+
+    function selectSize(id, size, price) {
+        currentSelection[id].size = size;
+        currentSelection[id].price = price;
+        document.getElementById(`price-display-${id}`).innerText = `₹${price}`;
+        const card = document.getElementById(`card-${id}`);
+        card.querySelectorAll('.size-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.innerText === size);
+        });
+    }
+
+    function handleAddToCart(id) {
+        const choice = currentSelection[id];
+        const uniqueId = `${id}-${choice.size}`;
+        const existing = cart.find(item => item.uniqueId === uniqueId);
+        if (existing) { existing.quantity += 1; } 
+        else {
+            cart.push({
+                uniqueId: uniqueId,
+                displayName: `${choice.name} (${choice.size})`,
+                price: choice.price,
+                quantity: 1
+            });
+        }
+        renderCart();
+    }
+
+    function updateQty(uniqueId, amount) {
+        const index = cart.findIndex(item => item.uniqueId === uniqueId);
+        if (index !== -1) {
+            cart[index].quantity += amount;
+            if (cart[index].quantity <= 0) cart.splice(index, 1);
+        }
+        renderCart();
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cart-items');
+        const emptyMsg = document.getElementById('empty-msg');
+        const totalDisplay = document.getElementById('grand-total');
+        const checkoutBtn = document.getElementById('checkout-button');
+        container.innerHTML = '';
+        let total = 0;
+
+        if (cart.length === 0) {
+            emptyMsg.style.display = 'block';
+            totalDisplay.innerText = `₹0`;
+            checkoutBtn.disabled = true;
+            return;
+        }
+
+        emptyMsg.style.display = 'none';
+        checkoutBtn.disabled = false;
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            const div = document.createElement('div');
+            div.className = 'cart-item';
+            div.innerHTML = `
+                <div><strong>${item.displayName}</strong><br><small>₹${item.price}</small></div>
+                <div class="quantity-controls">
+                    <button class="qty-btn" onclick="updateQty('${item.uniqueId}', -1)">-</button>
+                    <span>${item.quantity}</span>
+                    <button class="qty-btn" onclick="updateQty('${item.uniqueId}', 1)">+</button>
+                </div>
+                <div style="font-weight:bold;">₹${itemTotal}</div>`;
+            container.appendChild(div);
+        });
+        totalDisplay.innerText = `₹${total + DELIVERY_FEE} (Inc. Delivery)`;
+    }
+
+    function submitOrder() {
+        if (confirm("Authorize transaction?")) {
+            const orderData = {
+                items: cart.map(i => `${i.displayName} x${i.quantity}`).join(", "),
+                total: cart.reduce((sum, i) => sum + (i.price * i.quantity), 0) + DELIVERY_FEE
+            };
+            fetch('api.php?action=addOrder', { method: 'POST', body: JSON.stringify(orderData) })
+            .then(() => {
+                alert("Order placed successfully!");
+                cart = [];
+                renderCart();
+            });
+        }
+    }
+
+    renderMenu();
+</script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Brew & Bloom</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: #F5F5DC;
+    margin: 0;
+    padding: 0;
+    display: flex; flex-direction: column; min-height: 100vh;
+}
+
+/* NAVBAR */
+.navbar {
+    position: fixed;
+    top: 0; 
+    width: 100%;
+    padding: 15px 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #6F4E37; /* ✅ your color */
+    z-index: 100;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: white;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.nav-links a:hover { 
+    color: #FFD700; 
+}
+
+.nav-icons {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-icons a {
+    color: white;
+    font-size: 1.2rem;
+}
+
+/* MAIN CONTENT */
+.auth-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-top: 60px;
+}
+
+.auth-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-card h2 {
+    font-family: 'Playfair Display', serif;
+    color: #6F4E37;
+    margin-bottom: 25px;
+    font-size: 2rem;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    background: #6F4E37;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.auth-btn:hover {
+    background: #5a3d2b;
+}
+
+.toggle-link {
+    margin-top: 20px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.toggle-link span {
+    color: #6F4E37;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <a href="index.html" class="logo">Brew & Bloom</a>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="order online.html">Order Online</a></li>
+    </ul>
+    <div class="nav-icons">
+        <a>🛒</a>
+        <a href="cafe login.html" id="authLink">Login</a>
+    </div>
+</nav>
+
+<div class="auth-container">
+    <div class="auth-card" id="loginForm">
+        <h2>Welcome Back</h2>
+        <div class="input-group">
+            <input type="text" id="loginUser" placeholder="Username">
+        </div>
+        <div class="input-group">
+            <input type="password" id="loginPass" placeholder="Password">
+        </div>
+        <button class="auth-btn" onclick="handleAuth('login')">Login</button>
+        <p class="toggle-link">New here? <span onclick="toggleAuth()">Create an account</span></p>
+    </div>
+
+    <div class="auth-card" id="signupForm" style="display: none;">
+        <h2>Join the Ritual</h2>
+        <div class="input-group">
+            <input type="text" id="signupUser" placeholder="Username">
+        </div>
+        <div class="input-group">
+            <input type="email" id="signupEmail" placeholder="Email Address">
+        </div>
+        <div class="input-group">
+            <input type="password" id="signupPass" placeholder="Password">
+        </div>
+        <button class="auth-btn" onclick="handleAuth('signup')">Sign Up</button>
+        <p class="toggle-link">Already have an account? <span onclick="toggleAuth()">Login</span></p>
+    </div>
+</div>
+
+<script>
+function checkNavbar() {
+    fetch('api.php?action=getProfile')
+        .then(res => res.json())
+        .then(data => {
+            const navIcons = document.querySelector('.nav-icons');
+            if (data.authenticated) {
+                navIcons.innerHTML = `
+                    <a>🛒</a>
+                    <a href="profile.html">Profile</a>
+                    <a href="#" id="authLink">Logout</a>
+                `;
+                document.getElementById('authLink').onclick = function(e) {
+                    e.preventDefault();
+                    if (confirm("Are you sure you want to logout?")) {
+                        fetch('api.php?action=logout', { method: 'POST' })
+                            .then(() => window.location.reload());
+                    }
+                };
+            }
+        });
+}
+window.addEventListener('DOMContentLoaded', checkNavbar);
+
+function toggleAuth() {
+    const login = document.getElementById('loginForm');
+    const signup = document.getElementById('signupForm');
+    if (login.style.display === 'none') {
+        login.style.display = 'block';
+        signup.style.display = 'none';
+    } else {
+        login.style.display = 'none';
+        signup.style.display = 'block';
+    }
+}
+
+function handleAuth(type) {
+    let payload = {};
+    if (type === 'login') {
+        payload = {
+            username: document.getElementById('loginUser').value,
+            password: document.getElementById('loginPass').value
+        };
+    } else {
+        payload = {
+            username: document.getElementById('signupUser').value,
+            email: document.getElementById('signupEmail').value,
+            password: document.getElementById('signupPass').value
+        };
+    }
+
+    fetch(`api.php?action=${type}`, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            if (type === 'signup') {
+                alert("Account created! Please login.");
+                toggleAuth();
+            } else {
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                window.location.href = redirect || (data.role === 'admin' ? 'admin.html' : 'index.html');
+            }
+        } else {
+            alert(data.message || "Something went wrong");
+        }
+    });
+}
+</script>
+</body>
+</html>

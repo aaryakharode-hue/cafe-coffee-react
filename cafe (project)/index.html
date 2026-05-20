@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brew & Bloom | Artisan Coffee</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+  <nav class="navbar">
+    <a href="index.html" class="logo">Brew & Bloom</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="order online.html">Order Online</a></li>
+      <li><a href="review.html">review</a></li>
+    </ul>
+    <div class="nav-icons">
+      <a>🛒</a>
+      <a href="cafe login.html" id="authLink">Login</a>
+    </div>
+  </nav>
+</header>
+
+    <header class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="hero-content reveal bounce-effect">
+            <h1>YOUR DAILY RITUAL</h1>
+            <h1> STARTS HERE<br></h1>
+           <a href="menu.html">
+    <button class="btn-primary">EXPLORE MENU</button>
+</a>
+
+        </div>
+
+        <div class="scroll-indicator">
+            <div class="mouse"></div>
+        </div>
+    </header>
+    <section class="brewing-section" id="menu">
+        <div class="container">
+            <h2 class="section-title reveal">Master Your Brew</h2>
+            <div class="bento-grid">
+                <div class="card reveal">
+                    <img src="breawing.jfif" alt="Brewing">
+                    <div class="card-info">
+                        <h3>Pour Over</h3>
+                    </div>
+                </div>
+                <div class="card reveal">
+                    <img src="Cappuccino.jpeg" alt="Cappuccino">
+                    <div class="card-info">
+                        <h3>Artisan Foam</h3>
+                    </div>
+                </div>
+                <div class="card reveal">
+                    <img src="iced coffee.jpeg" alt="Iced Coffee">
+                    <div class="card-info">
+                        <h3>Cold Brew</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-col">
+      <h3 class="footer-logo">BRAND<span>NAME</span></h3>
+      <p>Building the future of digital experiences with a focus on simplicity and performance.</p>
+      <div class="social-links">
+        <a href="#">FB</a> <a href="#">IG</a> <a href="#">LI</a> <a href="#">X</a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Portfolio</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Newsletter</h4>
+      <p>Get the latest updates directly in your inbox.</p>
+      <form class="footer-form">
+        <input type="email" placeholder="Email address" required>
+        <button type="submit">Join</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 BrandName. All Rights Reserved.</p>
+  </div>
+</footer>
+
+    <script>
+        // Auth & Navbar Check
+        function checkNavbar() {
+            fetch('api.php?action=getProfile')
+                .then(res => res.json())
+                .then(data => {
+                    const navIcons = document.querySelector('.nav-icons');
+                    if (data.authenticated) {
+                        navIcons.innerHTML = `
+                            <a>🛒</a>
+                            <a href="profile.html">Profile</a>
+                            <a href="#" id="authLink">Logout</a>
+                        `;
+                        document.getElementById('authLink').onclick = function(e) {
+                            e.preventDefault();
+                            if (confirm("Are you sure you want to logout?")) {
+                                fetch('api.php?action=logout', { method: 'POST' })
+                                    .then(() => window.location.reload());
+                            }
+                        };
+                    } else {
+                        const authLink = document.getElementById('authLink');
+                        authLink.innerText = "Login";
+                        authLink.href = "cafe login.html?redirect=index.html";
+                        authLink.onclick = null;
+                    }
+                });
+        }
+
+        window.addEventListener('DOMContentLoaded', checkNavbar);
+
+        // Scroll Reveal Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 3D Tilt Effect
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+            });
+        });
+    </script>
+</body>
+</html>
